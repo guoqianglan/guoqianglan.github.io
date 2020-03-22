@@ -1,0 +1,13 @@
+I"9<p>In this post, I will show you how to deploy jupyterHub with Kubernetes on OpenStack. 
+More specifically, I will attempt to build a academic cloud computing environment on Compute Canada Cloud.</p>
+
+<p>This post is split into three parts (see links below)</p>
+
+<p>Part 1) <a href="/Read-me">Deploy Kubernetes with kubespray on OpenStack</a></p>
+
+<p>Part 2) <a href="/Read-me">Deploy Heketi-Glusterfs for dynamic storage</a></p>
+
+<p>Part 3) <a href="/Read-me">Deploy and set up JupyterHub</a></p>
+
+<p><img src="/images/academic_computing.png" alt="_config.yml" /></p>
+:ET

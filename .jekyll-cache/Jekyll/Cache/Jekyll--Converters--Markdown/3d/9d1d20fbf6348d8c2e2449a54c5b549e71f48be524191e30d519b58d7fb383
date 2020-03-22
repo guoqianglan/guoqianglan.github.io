@@ -1,0 +1,13 @@
+I"{<p>In this post, I will show you how to deploy Kubernetes OpenStack.
+More specifically, <a href="https://github.com/kubernetes-sigs/kubespray">Kubespary</a> with 
+<a href="https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform">Terraform suport</a> will be applied to simplify the deployment.</p>
+
+<h2 id="status">Status</h2>
+
+<ul>
+  <li><em>Local:</em> Ubuntu WSL system (Any Linux system should work as well)</li>
+  <li><em>Academic cloud:</em> <a href="https://arbutus.cloud.computecanada.ca/">Compute Canada Cloud (Arbhutus)</a></li>
+</ul>
+
+<p><img src="/images/academic_computing.png" alt="_config.yml" /></p>
+:ET
