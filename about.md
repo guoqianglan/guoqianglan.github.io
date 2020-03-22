@@ -4,11 +4,12 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+I am an innovative full stack python developer, somewhat geek, passionate about how big data artificial intelligent can transform academic research and industry.
 
-### More Information
+I pride myself in being a fast learner who always keeps learning, enabling myself to quickly adapt to different domains and be updated with latest technologies.
 
-A place to include any other types of information that you'd like to include about yourself.
+
+![_config.yml]({{ site.baseurl }}/images/my_profile.jpg)
 
 ### Contact me
 

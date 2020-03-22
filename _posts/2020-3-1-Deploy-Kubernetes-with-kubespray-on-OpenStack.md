@@ -10,7 +10,8 @@ More specifically, [Kubespary](https://github.com/kubernetes-sigs/kubespray) wit
 ## Status
 
 - *Local:* Ubuntu WSL system (Any Linux system should work as well)
-- *Cloud:* Persitent zone belong to [Compute Canada Cloud, Arbhutus](https://arbutus.cloud.computecanada.ca/) (Other clouds based on OpenStack should work as well)
+- *Cloud:* Persistent zone belong to [Compute Canada Cloud, Arbhutus](https://arbutus.cloud.computecanada.ca/) 
+(Other clouds based on OpenStack should work following this tutorial as well)
 
 ## Requirements
 
@@ -139,32 +140,63 @@ k8s_node_fips = []
 private_subnet_id = dfa59b71-**************
 router_id = cf695cfb-******************
 ```
-Then go back to the kubespary root directory.
-
-Try if ansible can successfully reach our clusters using
-
+Then go back to the kubespary root directory. Try if ansible can successfully reach our clusters using
 ```
 ansible -i inventory/my-kube/hosts -m ping all
 ```
-Note:
-If the cluster is unreachable, please add additional security group, SSH (TCP, port 22), to the k8s-cluster-k8s security group, and then try agian.
+If all of the nodes are accessible, the output would look like
+![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/ansible_ping_success.png)
 
+**Note**:
 
-modify `inventory/$CLUSTER/group_vars/all/all.yml` `cloud_provider: openstack`
+- *If the cluster is unreachable, please open additional TCP port 22 for SSH  then try again.*
 
-modify `inventory/$CLUSTER/group_vars/k8s-cluster/k8s-cluster.yml`,  `kube_network_plugin: flannel` resolvconf_mode we will use “docker_dns”, `use_access_ip: 0`
+Then let's see how to build Kubernetes on this cluster. Some additional configurations need to be modified.
 
-modify `inventory/$CLUSTER/group_vars/k8s-cluster/addons.yml` `helm_enabled: true`
+1. In `inventory/$CLUSTER/group_vars/all/all.yml`, set up 
+```
+cloud_provider: openstack
+```
 
-Note:
-If you failed to pass the etcd cluster healthy check, you may need to open port, TCP 2379. If it doesn't help, you would need login the master node 
-and run commamd, `sudo chmod 755 -R /etc/ssl/etcd`. After that, you can check the healthy status by running
-`etcdctl --endpoints https://<master_ip>:2379 --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1.pem --key-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1-key.pem cluster-health`
+2. In `inventory/$CLUSTER/group_vars/k8s-cluster/k8s-cluster.yml`, set up 
+```
+kube_network_plugin: flannel
+resolvconf_mode: docker_dns
+use_access_ip: 0
+```
 
+3. In `inventory/$CLUSTER/group_vars/k8s-cluster/addons.yml` set up 
+```
+helm_enabled: true
+```
+
+**Note**:
+- *If you failed to pinging float ip (`ping <float_ip>`), please open ICMP any port and then try again.*
 
 Make sure you have good internet connection, or it is very easy to get timeout exception when you run the ansible playbook.
 ```
-
-
+ansible-playbook --become -i inventory/$CLUSTER/hosts cluster.yml
 ```
+- *If you failed to pass the etcd cluster healthy check, you may need to open port, TCP 2379. If it doesn't help, you would need login the master node 
+and run commamd, `sudo chmod 755 -R /etc/ssl/etcd`. After that, you can check the healthy status by running
+`etcdctl --endpoints https://<master_ip>:2379 --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1.pem --key-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1-key.pem cluster-health`*
+
+All done! please login in your master node and try to run `kubectl get nodes`, it should show the output like this
+![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/kubectl_get_nodes.png)
+
+**Note**:
+- *If it return error message, 
+`"The connection to the server localhost:8080 was refused - did you specify the right host or port?"`, 
+please try to set up $KUBECONFIG using following command,*
+```
+sudo cp /etc/kubernetes/admin.conf $HOME/ && sudo chown $(id -u):$(id -g) $HOME/admin.conf && export KUBECONFIG=$HOME/admin.conf
+```
+
+Then you can try again.
+
+In the future, if you restart your master node, you may need to restart the Kubernetes by running 
+```
+sudo systemctl restart kubelet.service
+```
+
 ![_config.yml]({{ site.baseurl }}/images/academic_computing.png)
