@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-I am an innovative full stack python developer, somewhat geek, passionate about how big data artificial intelligent can transform academic research and industry.
+I am an innovative developer, somewhat geek, passionate about how big data artificial intelligent can transform academic research and industry.
 
 I pride myself in being a fast learner who always keeps learning, enabling myself to quickly adapt to different domains and be updated with latest technologies.
 
