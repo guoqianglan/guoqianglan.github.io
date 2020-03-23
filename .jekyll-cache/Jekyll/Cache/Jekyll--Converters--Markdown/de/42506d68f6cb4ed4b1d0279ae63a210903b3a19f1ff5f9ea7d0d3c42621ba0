@@ -1,4 +1,4 @@
-I"…)<p>In this post, I will show you how to deploy Kubernetes OpenStack.
+I"§)<p>In this post, I will show you how to deploy Kubernetes OpenStack.
 More specifically, <a href="https://github.com/kubernetes-sigs/kubespray">Kubespary</a> with 
 <a href="https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform">Terraform suport</a> will be applied to simplify the deployment.</p>
 
@@ -178,12 +178,12 @@ use_access_ip: 0
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-playbook --become -i inventory/$CLUSTER/hosts cluster.yml
 </code></pre></div></div>
 <ul>
-  <li><em>If you failed to pass the etcd cluster healthy check, you may need to open port, TCP 2379. If it doesnâ€™t help, you would need login the master node 
+  <li><em>If you failed to pass the etcd cluster healthy check, you may need to open port, TCP 2379. If it still doesnâ€™t help, you would need to login the master node 
 and run commamd, <code class="highlighter-rouge">sudo chmod 755 -R /etc/ssl/etcd</code>. After that, you can check the healthy status by running
 <code class="highlighter-rouge">etcdctl --endpoints https://&lt;master_ip&gt;:2379 --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1.pem --key-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1-key.pem cluster-health</code></em></li>
 </ul>
 
-<p>All done! please login in your master node and try to run <code class="highlighter-rouge">kubectl get nodes</code>, it should show the output like this
+<p>After all of these have been done, Please login in your master node and try to run <code class="highlighter-rouge">kubectl get nodes</code>, it should show the output like this
 <img src="/images/blog_kube_jhub/kubectl_get_nodes.png" alt="_config.yml" /></p>
 
 <p><strong>Note</strong>:</p>

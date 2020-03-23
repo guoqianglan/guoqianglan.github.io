@@ -118,30 +118,28 @@ bastion_allowed_remote_ips = ["0.0.0.0/0"]
 
 ```
 To start the Terraform deployment, you need to install some plugins using command as follows.
-```
+```bash
 terraform init contrib/terraform/openstack
 ```
 Start to build the cluster.
-```
+```bash
 terraform apply -var-file=cluster.tfvars ../../contrib/terraform/openstack
 ```
 If it is finished successfully, you will get output as follows.
-```
+```bash
 Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
 
 Outputs:
 
 bastion_fips = []
 floating_network_id = 6621bf61-****************
-k8s_master_fips = [
-  "206.**.**.***",
-]
+k8s_master_fips = ["206.**.**.***",]
 k8s_node_fips = []
 private_subnet_id = dfa59b71-**************
 router_id = cf695cfb-******************
 ```
 Then go back to the kubespary root directory. Try if ansible can successfully reach our clusters using
-```
+```bash
 ansible -i inventory/my-kube/hosts -m ping all
 ```
 If all of the nodes are accessible, the output would look like
@@ -150,52 +148,62 @@ If all of the nodes are accessible, the output would look like
 **Note**:
 
 - *If the cluster is unreachable, please open additional TCP port 22 for SSH  then try again.*
+- *There are other ports you need to open, i.e., ICMP port which enable pinging master ip externally, TCP 2379 for etcd connection*
+
+![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/add_additional_security_rules.png)
 
 Then let's see how to build Kubernetes on this cluster. Some additional configurations need to be modified.
 
 1. In `inventory/$CLUSTER/group_vars/all/all.yml`, set up 
-```
+```yaml
 cloud_provider: openstack
 ```
 
 2. In `inventory/$CLUSTER/group_vars/k8s-cluster/k8s-cluster.yml`, set up 
-```
+```yaml
 kube_network_plugin: flannel
 resolvconf_mode: docker_dns
 use_access_ip: 0
 ```
 
 3. In `inventory/$CLUSTER/group_vars/k8s-cluster/addons.yml` set up 
-```
+```yaml
 helm_enabled: true
 ```
 
 **Note**:
-- *If you failed to pinging float ip (`ping <float_ip>`), please open ICMP any port and then try again.*
+- *If you failed to ping float ip (`ping <float_ip>`), please open ICMP any port and then try again.*
 
-Make sure you have good internet connection, or it is very easy to get timeout exception when you run the ansible playbook.
-```
+Then make sure you have good internet connection, or you may get timeout exception when you run the ansible-playbook.
+```bash
 ansible-playbook --become -i inventory/$CLUSTER/hosts cluster.yml
 ```
-- *If you failed to pass the etcd cluster healthy check, you may need to open port, TCP 2379. If it doesn't help, you would need login the master node 
-and run commamd, `sudo chmod 755 -R /etc/ssl/etcd`. After that, you can check the healthy status by running
-`etcdctl --endpoints https://<master_ip>:2379 --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1.pem --key-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1-key.pem cluster-health`*
+**Note**:
+- *If you failed to pass the etcd cluster healthy check, you may need to open port, TCP 2379. If it still doesn't help, you would need to login the master node 
+and run commamd*, 
+```bash
+sudo chmod 755 -R /etc/ssl/etcd
+```
+*After that, you can check the healthy status by running*
+```
+etcdctl --endpoints https://<master_ip>:2379 --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1.pem --key-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1-key.pem cluster-health
+```
 
-All done! please login in your master node and try to run `kubectl get nodes`, it should show the output like this
+After all of these have been done, Please login in your master node and try to run `kubectl get nodes`, it should show the output like this
 ![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/kubectl_get_nodes.png)
 
 **Note**:
 - *If it return error message, 
 `"The connection to the server localhost:8080 was refused - did you specify the right host or port?"`, 
 please try to set up $KUBECONFIG using following command,*
-```
+```bash
 sudo cp /etc/kubernetes/admin.conf $HOME/ && sudo chown $(id -u):$(id -g) $HOME/admin.conf && export KUBECONFIG=$HOME/admin.conf
 ```
 
 Then you can try again.
 
-In the future, if you restart your master node, you may need to restart the Kubernetes by running 
-```
+In the future, if you restart your master node, you may need to also restart the Kubernetes by running 
+```bash
 sudo systemctl restart kubelet.service
 ```
 
