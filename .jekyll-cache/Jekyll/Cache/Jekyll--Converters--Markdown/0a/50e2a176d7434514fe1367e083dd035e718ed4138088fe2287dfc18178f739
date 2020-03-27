@@ -1,0 +1,34 @@
+I"ô<p><img src="/images/academic_computing.png" alt="_config.yml" /></p>
+
+<p>In this post, I will show you how to deploy and configure JupyterHub.
+Here I assumed that you already have a Kubernetes cluster and have set up the storageclass based on Heketi-glusterfs.
+if not, please follow my <a href="/deploy-heketi-glusterfs-for-dynamic-storage">previous blog</a> to build one.</p>
+
+<h2 id="cluster-status">Cluster Status</h2>
+
+<p>Master nodes:</p>
+<ul>
+  <li>k8s-cluster-k8s-master-1 192.168.147.6</li>
+</ul>
+
+<p>Worker nodes:</p>
+<ul>
+  <li>k8s-cluster-k8s-node-nf-1 192.168.147.13 /dev/vdb</li>
+  <li>k8s-cluster-k8s-node-nf-2 192.168.147.17 /dev/vdb</li>
+  <li>k8s-cluster-k8s-node-nf-3 192.168.147.25 /dev/vdb</li>
+  <li>k8s-cluster-k8s-node-nf-4 192.168.147.16 /dev/vdb</li>
+</ul>
+
+<p>Storageclass:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>centos@k8s-cluster-k8s-master-1 build_jhub]<span class="nv">$ </span>kubectl get storageclass
+NAME             PROVISIONER               AGE
+gluster-heketi   kubernetes.io/glusterfs   45m
+</code></pre></div></div>
+
+<h2 id="deploy-jupyterhub-using-helm">Deploy jupyterhub using helm</h2>
+
+<p>First, you need to <a href="https://zero-to-jupyterhub.readthedocs.io/en/stable/setup-helm.html">install and initialize helm</a>.</p>
+
+<p>Then please visit <a href="https://zero-to-jupyterhub.readthedocs.io/en/stable/setup-jupyterhub.html">zero-to-jupyterhub</a> and go through the introduction first.</p>
+
+:ET

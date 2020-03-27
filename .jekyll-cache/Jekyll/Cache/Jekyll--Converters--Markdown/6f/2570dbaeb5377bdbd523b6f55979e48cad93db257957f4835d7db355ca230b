@@ -1,0 +1,199 @@
+I"gR<p><img src="/images/academic_computing.png" alt="_config.yml" /></p>
+
+<p>In this post, I will show you how to deploy Heketi-Glusterfs on Kubernetes cluster for dynamic storage.
+Here I assumed that you already have a Kubernetes cluster,
+if not, please follow my <a href="/deploy-kubernetes-with-kubespray-on-openstack">previous blog</a> to build one.</p>
+
+<h2 id="cluster-status">Cluster Status</h2>
+
+<p>Master nodes:</p>
+<ul>
+  <li>k8s-cluster-k8s-master-1 192.168.147.6</li>
+</ul>
+
+<p>Worker nodes:</p>
+<ul>
+  <li>k8s-cluster-k8s-node-nf-1 192.168.147.13 /dev/vdb</li>
+  <li>k8s-cluster-k8s-node-nf-2 192.168.147.17 /dev/vdb</li>
+  <li>k8s-cluster-k8s-node-nf-3 192.168.147.25 /dev/vdb</li>
+  <li>k8s-cluster-k8s-node-nf-4 192.168.147.16 /dev/vdb</li>
+</ul>
+
+<p><img src="/images/blog_kube_jhub/volumn_setup.png" alt="_config.yml" /></p>
+
+<p><strong>Note</strong>:</p>
+<ul>
+  <li><em>You just need to create the volumns (‘/dev/vdb’) and attach them to the worker nodes, please don’t do anything else to the volumns.</em></li>
+</ul>
+
+<h2 id="download-files-for-deployment">Download files for deployment</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/glusterfs-daemonset.json
+wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/heketi-bootstrap.json
+wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/heketi-deployment.json
+wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/heketi-service-account.json
+wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/heketi.json
+wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/topology-sample.json
+</code></pre></div></div>
+
+<h2 id="deploy-glusterfs">Deploy glusterfs</h2>
+
+<p>Lable the nodes which will used to deploy glusterfs</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl label node k8s-cluster-k8s-node-nf-1 <span class="nv">storagenode</span><span class="o">=</span>glusterfs
+kubectl label node node-02 <span class="nv">storagenode</span><span class="o">=</span>glusterfs
+kubectl label node node-03 <span class="nv">storagenode</span><span class="o">=</span>glusterfs
+</code></pre></div></div>
+
+<p>Modified ‘glusterfs-daemonset.json’, as</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DaemonSet"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apps/v1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"glusterfs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deployment"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GlusterFS Daemon Set"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"selector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"matchLabels"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"glusterfs-node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"daemonset"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"template"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"glusterfs-node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"daemonset"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"nodeSelector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"storagenode"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"hostNetwork"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"containers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gluster/gluster-centos:latest"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"imagePullPolicy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Always"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"volumeMounts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-heketi"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/lib/heketi"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-run"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/run"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-lvm"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/run/lvm"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-etc"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/etc/glusterfs"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-logs"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/log/glusterfs"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-config"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/lib/glusterd"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-dev"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev"</span><span class="w">
+                            </span><span class="p">},</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-cgroup"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"mountPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/sys/fs/cgroup"</span><span class="w">
+                            </span><span class="p">}</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="nl">"securityContext"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"capabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                            </span><span class="nl">"privileged"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nl">"readinessProbe"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"initialDelaySeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"exec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                    </span><span class="s2">"/bin/bash"</span><span class="p">,</span><span class="w">
+                                    </span><span class="s2">"-c"</span><span class="p">,</span><span class="w">
+                                    </span><span class="s2">"systemctl status glusterd.service"</span><span class="w">
+                                </span><span class="p">]</span><span class="w">
+                            </span><span class="p">}</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nl">"livenessProbe"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"initialDelaySeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"exec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                    </span><span class="s2">"/bin/bash"</span><span class="p">,</span><span class="w">
+                                    </span><span class="s2">"-c"</span><span class="p">,</span><span class="w">
+                                    </span><span class="s2">"systemctl status glusterd.service"</span><span class="w">
+                                </span><span class="p">]</span><span class="w">
+                            </span><span class="p">}</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="nl">"volumes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-heketi"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/lib/heketi"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-run"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-lvm"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/run/lvm"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-etc"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/etc/glusterfs"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-logs"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/log/glusterfs"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-config"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/lib/glusterd"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-dev"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glusterfs-cgroup"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/sys/fs/cgroup"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>Then</p>
+:ET

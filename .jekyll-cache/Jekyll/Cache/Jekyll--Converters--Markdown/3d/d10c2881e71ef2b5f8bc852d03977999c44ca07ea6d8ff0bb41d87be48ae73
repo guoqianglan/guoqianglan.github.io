@@ -1,0 +1,4 @@
+I"<p>In this post, I will show you how to deploy Heketi-Glusterfs on Kubernetes cluster for dynamic storage.
+Here I assumed that you already have a Kubernetes cluster,
+if not, please follow my <a href="/deploy-kubernetes-with-kubespray-on-openstack">previous blog</a> to build one.</p>
+:ET
