@@ -25,8 +25,12 @@ Worker nodes:
 **Note**:
 - *You just need to create the volumns ('/dev/vdb') and attach them to the worker nodes, please don't do anything else to the volumns.*
 
-## Requirement
+## Requirements
 
+First of all, we need to install glusterfs and load lvm kernel modules in all of our nodes.
+We can use ansible-playbook to achieve it. Create a 'prepare_heketi.yml' file with content as below.
+
+```
 {% raw %}
 ```yaml
 - hosts: all
@@ -56,6 +60,16 @@ Worker nodes:
 ```
 {% endraw %}
 
+Then run 
+```bash
+ansible-playbook --become -i hosts prepare_heketi.yml
+```
+Here, the 'hosts' is the one we set up using kubespray as introduced in our second blog, 
+[Deploy Kubernetes with kubespray on Openstack]({{ site.baseurl }}/deploy-kubernetes-with-kubespray-on-openstack)
+
+If you don't know how to use ansibel-playbook, don't go to my blog, 
+
+
 ansible -i inventory/my-kube/hosts -m yum -a "name=glusterfs" -u centos --become all
 ansible -i inventory/my-kube/hosts -m yum -a "name=glusterfs-fuse" -u centos --become all
 
@@ -63,8 +77,10 @@ ansible -i inventory/my-kube/hosts -a "modprobe dm_snapshot" -u centos --become 
 ansible -i inventory/my-kube/hosts -a "modprobe dm_mirror" -u centos --become all
 ansible -i inventory/my-kube/hosts -a "modprobe dm_thin_pool" -u centos --become all
 
+Remove taint of the master node.
+```bash
 kubectl taint node k8s-cluster-k8s-master-1 node-role.kubernetes.io/master:NoSchedule-
-
+```
 
 ## Download files for deployment
 
@@ -79,7 +95,7 @@ wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/to
 
 ## Deploy glusterfs
 
-Lable the nodes which will used to deploy glusterfs
+Label the nodes which will used to deploy glusterfs
 ```bash
 kubectl label node k8s-cluster-k8s-node-nf-1 storagenode=glusterfs
 kubectl label node k8s-cluster-k8s-node-nf-2 storagenode=glusterfs

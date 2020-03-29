@@ -1,4 +1,4 @@
-I"T�<p><img src="/images/academic_computing.png" alt="_config.yml" /></p>
+I"+�<p><img src="/images/academic_computing.png" alt="_config.yml" /></p>
 
 <p>In this post, I will show you how to deploy Heketi-Glusterfs on Kubernetes cluster for dynamic storage.
 Here I assumed that you already have a Kubernetes cluster,
@@ -19,13 +19,6 @@ if not, please follow my <a href="/deploy-kubernetes-with-kubespray-on-openstack
   <li>k8s-cluster-k8s-node-nf-4 192.168.147.16 /dev/vdb</li>
 </ul>
 
-<p>Storageclass:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>centos@k8s-cluster-k8s-master-1 build_jhub]<span class="nv">$ </span>kubectl get storageclass
-NAME             PROVISIONER               AGE
-gluster-heketi   kubernetes.io/glusterfs   45m
-
-</code></pre></div></div>
-
 <p><img src="/images/blog_kube_jhub/volumn_setup.png" alt="_config.yml" /></p>
 
 <p><strong>Note</strong>:</p>
@@ -33,33 +26,46 @@ gluster-heketi   kubernetes.io/glusterfs   45m
   <li><em>You just need to create the volumns (‘/dev/vdb’) and attach them to the worker nodes, please don’t do anything else to the volumns.</em></li>
 </ul>
 
-<h2 id="requirement">Requirement</h2>
+<h2 id="requirements">Requirements</h2>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
-  <span class="na">become</span><span class="pi">:</span> <span class="s">yes</span>
-  <span class="na">tasks</span><span class="pi">:</span>
-  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Load</span><span class="nv"> </span><span class="s">lvm</span><span class="nv"> </span><span class="s">kernel</span><span class="nv"> </span><span class="s">modules"</span>
-    <span class="na">with_items</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">dm_snapshot"</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">dm_mirror"</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">dm_thin_pool"</span>
-    <span class="na">modprobe</span><span class="pi">:</span>
-      <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}"</span>
-      <span class="na">state</span><span class="pi">:</span> <span class="s2">"</span><span class="s">present"</span>
+<p>First of all, we need to install glusterfs and load lvm kernel modules in all of our nodes.
+We can use ansible-playbook to achieve it. Create a ‘prepare_heketi.yml’ file with content as below.</p>
 
-  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">add latest glusterfs YUM repository</span>
-    <span class="na">yum_repository</span><span class="pi">:</span>
-      <span class="na">name</span><span class="pi">:</span> <span class="s">glusterfs</span>
-      <span class="na">description</span><span class="pi">:</span> <span class="s">glusterfs repository</span>
-      <span class="na">baseurl</span><span class="pi">:</span> <span class="s">http://mirror.centos.org/centos/7/storage/x86_64/gluster-7</span>
-      <span class="na">gpgcheck</span><span class="pi">:</span> <span class="s">no</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+```yaml
+- hosts: all
+  become: yes
+  tasks:
+  - name: "Load lvm kernel modules"
+    with_items:
+      - "dm_snapshot"
+      - "dm_mirror"
+      - "dm_thin_pool"
+    modprobe:
+      name: "{{ item }}"
+      state: "present"
 
-  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">install glusterfs</span>
-    <span class="na">yum</span><span class="pi">:</span>
-      <span class="na">name</span><span class="pi">:</span> <span class="s">glusterfs-7.1-1.el7.x86_64</span>
-      <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
-      <span class="na">update_cache</span><span class="pi">:</span> <span class="no">true</span>
+  - name: add latest glusterfs YUM repository
+    yum_repository:
+      name: glusterfs
+      description: glusterfs repository
+      baseurl: http://mirror.centos.org/centos/7/storage/x86_64/gluster-7
+      gpgcheck: no
+
+  - name: install glusterfs
+    yum:
+      name: glusterfs-7.1-1.el7.x86_64
+      state: present
+      update_cache: true
 </code></pre></div></div>
+
+<p>Then run</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-playbook <span class="nt">--become</span> <span class="nt">-i</span> hosts prepare_heketi.yml
+</code></pre></div></div>
+<p>Here, the ‘hosts’ is the one we set up using kubespray as introduced in our second blog, 
+<a href="/deploy-kubernetes-with-kubespray-on-openstack">Deploy Kubernetes with kubespray on Openstack</a></p>
+
+<p>If you don’t know how to use ansibel-playbook, don’t go to my blog,</p>
 
 <p>ansible -i inventory/my-kube/hosts -m yum -a “name=glusterfs” -u centos –become all
 ansible -i inventory/my-kube/hosts -m yum -a “name=glusterfs-fuse” -u centos –become all</p>
@@ -68,7 +74,9 @@ ansible -i inventory/my-kube/hosts -m yum -a “name=glusterfs-fuse” -u centos
 ansible -i inventory/my-kube/hosts -a “modprobe dm_mirror” -u centos –become all
 ansible -i inventory/my-kube/hosts -a “modprobe dm_thin_pool” -u centos –become all</p>
 
-<p>kubectl taint node k8s-cluster-k8s-master-1 node-role.kubernetes.io/master:NoSchedule-</p>
+<p>Remove taint of the master node.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl taint node k8s-cluster-k8s-master-1 node-role.kubernetes.io/master:NoSchedule-
+</code></pre></div></div>
 
 <h2 id="download-files-for-deployment">Download files for deployment</h2>
 
@@ -82,7 +90,7 @@ wget https://raw.githubusercontent.com/heketi/heketi/master/extras/kubernetes/to
 
 <h2 id="deploy-glusterfs">Deploy glusterfs</h2>
 
-<p>Lable the nodes which will used to deploy glusterfs</p>
+<p>Label the nodes which will used to deploy glusterfs</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl label node k8s-cluster-k8s-node-nf-1 <span class="nv">storagenode</span><span class="o">=</span>glusterfs
 kubectl label node k8s-cluster-k8s-node-nf-2 <span class="nv">storagenode</span><span class="o">=</span>glusterfs
 kubectl label node k8s-cluster-k8s-node-nf-3 <span class="nv">storagenode</span><span class="o">=</span>glusterfs
