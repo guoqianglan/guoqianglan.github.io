@@ -40,7 +40,7 @@ disqus: guoqiang
 gitalk:
   comment_gitalk_clientId: ad5f26c8c07d507ea44c
   comment_gitalk_clientSecret: 781f06e536dc27745a321a57c2d8f8e792a36413
-  comment_gitalk_repo: guoqianglan.github.io
+  comment_gitalk_repo: gitalk_repo
   github_username: guoqianglan
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
