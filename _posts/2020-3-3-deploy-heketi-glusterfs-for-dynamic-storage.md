@@ -14,7 +14,7 @@ if not, please follow my [previous blog]({{ site.baseurl }}/deploy-kubernetes-wi
 Master nodes:
 - k8s-cluster-k8s-master-1 192.168.147.6
 
-Worker nodes:
+Worker nodes with volumn attached (/dev/vdb):
 - k8s-cluster-k8s-node-nf-1 192.168.147.13 /dev/vdb
 - k8s-cluster-k8s-node-nf-2 192.168.147.17 /dev/vdb
 - k8s-cluster-k8s-node-nf-3 192.168.147.25 /dev/vdb
@@ -32,7 +32,6 @@ We can use ansible-playbook to achieve it. Create a 'prepare_heketi.yml' file wi
 
 ```
 {% raw %}
-```yaml
 - hosts: all
   become: yes
   tasks:
@@ -52,30 +51,27 @@ We can use ansible-playbook to achieve it. Create a 'prepare_heketi.yml' file wi
       baseurl: http://mirror.centos.org/centos/7/storage/x86_64/gluster-7
       gpgcheck: no
 
-  - name: install glusterfs
+  - name: install glusterfs-fuse
     yum:
-      name: glusterfs-7.1-1.el7.x86_64
+      name: glusterfs-fuse
       state: present
       update_cache: true
-```
+
+  - name: install glusterfs
+    yum:
+      name: glusterfs
+      state: present
+      update_cache: true
 {% endraw %}
 
 Then run 
 ```bash
 ansible-playbook --become -i hosts prepare_heketi.yml
 ```
-Here, the 'hosts' is the one we set up using kubespray as introduced in our second blog, 
-[Deploy Kubernetes with kubespray on Openstack]({{ site.baseurl }}/deploy-kubernetes-with-kubespray-on-openstack)
 
-If you don't know how to use ansibel-playbook, don't go to my blog, 
+**Note**:
 
-
-ansible -i inventory/my-kube/hosts -m yum -a "name=glusterfs" -u centos --become all
-ansible -i inventory/my-kube/hosts -m yum -a "name=glusterfs-fuse" -u centos --become all
-
-ansible -i inventory/my-kube/hosts -a "modprobe dm_snapshot" -u centos --become all
-ansible -i inventory/my-kube/hosts -a "modprobe dm_mirror" -u centos --become all
-ansible -i inventory/my-kube/hosts -a "modprobe dm_thin_pool" -u centos --become all
+- *You need to install glusterfs>=7, because we need it to match with the versions we will use to deploy on pods.*
 
 Remove taint of the master node.
 ```bash
@@ -291,7 +287,7 @@ tar zxvf heketi-client-v9.0.0.linux.amd64.tar.gz
 sudo cp heketi-client/bin/heketi-cli /usr/local/bin/
 ```
 
-Modify the 'topology-sample.json' file to configure your cluster status, e.g.,
+Modify the 'topology-sample.json' file to configure your cluster status (replace the ip addresses and node names with your own), e.g.,
 ```json
 {
     "clusters": [
@@ -304,7 +300,7 @@ Modify the 'topology-sample.json' file to configure your cluster status, e.g.,
                                 "k8s-cluster-k8s-node-nf-1"
                             ],
                             "storage": [
-                                "192.168.147.13"
+                                "192.168.147.15"
                             ]
                         },
                         "zone": 1
@@ -322,7 +318,7 @@ Modify the 'topology-sample.json' file to configure your cluster status, e.g.,
                                 "k8s-cluster-k8s-node-nf-2"
                             ],
                             "storage": [
-                                "192.168.147.17"
+                                "192.168.147.5"
                             ]
                         },
                         "zone": 1
@@ -340,7 +336,7 @@ Modify the 'topology-sample.json' file to configure your cluster status, e.g.,
                                 "k8s-cluster-k8s-node-nf-3"
                             ],
                             "storage": [
-                                "192.168.147.25"
+                                "192.168.147.8"
                             ]
                         },
                         "zone": 1
@@ -358,7 +354,7 @@ Modify the 'topology-sample.json' file to configure your cluster status, e.g.,
                                 "k8s-cluster-k8s-node-nf-4"
                             ],
                             "storage": [
-                                "192.168.147.16"
+                                "192.168.147.14"
                             ]
                         },
                         "zone": 1
@@ -393,14 +389,9 @@ heketi-cli  topology load --json=topology-sample.json
 
 Now you may need to install device-mapper* if you want to have the heketi have persistent volumns.
 
-You can go back your local system and use ansible to install device-mapper* on all the nodes.
+You may need go back your local system and try to install device-mapper* on all the nodes.
 ```bash
 ansible -i inventory/my-kube/hosts -m yum -a "name=device-mapper*" -u centos --become all
-```
-
-Also you need to run `modprobe dm_thin_pool` in all your nodes.
-```bash
-ansible -i inventory/my-kube/hosts -a "modprobe dm_thin_pool" -u centos --become all
 ```
 
 Generate 'heketi-storage.json' by running
@@ -408,9 +399,10 @@ Generate 'heketi-storage.json' by running
 heketi-cli setup-openshift-heketi-storage
 ```
 
+
 In 'heketi-storage.json' file, we need to change the "heketi/heketi:dev" to "heketi/heketi:9",
-```json
-"image": "heketi/heketi:9"
+```bash
+sed -i 's/heketi:dev/heketi:9/g' heketi-storage.json
 ```
 
 Then
@@ -418,8 +410,12 @@ Then
 kubectl create -f heketi-storage.json
 ```
 
+After the pod, 'heketi-storage-copy-job', is completed, you can delete the temporary heketi deployment used for setting up.
+```bash
 kubectl delete all,svc,jobs,deployment,secret --selector="deploy-heketi"
+```
 
+Finally, you can deploy the persistent heketi.
 Modify 'heketi-deployment.json', 
 ```
 ......
@@ -433,9 +429,9 @@ Modify 'heketi-deployment.json',
         },
 ......
 ```
-
+Then create the deployment by
 ```bash
-kubectl apply -f heketi-deployment.json 
+kubectl create -f heketi-deployment.json 
 ```
 Check the new ClusterIP for heketi by `kubectl get svc|grep heketi` and set it up again.
 ```
@@ -456,6 +452,8 @@ Clusters:
 Id:5108ea8a533e7366b26755470cf6d242 [file][block]
 ```
 
+Finally, using the heketi clusters id, '5108ea8a533e7366b26755470cf6d242', and resturl, "http://10.233.42.189:8080", 
+we set create our storageclass as follows,
 ```yaml
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1

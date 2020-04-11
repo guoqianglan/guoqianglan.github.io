@@ -60,7 +60,7 @@ cluster_name = "k8s-cluster"
 az_list = ["Persistent_01", "Persistent_02"]
 az_list_node = ["Persistent_01", "Persistent_02"]
 
-dns_nameservers=["100.125.4.25", "8.8.8.8"]
+dns_nameservers=["8.8.4.4", "8.8.8.8"]
 
 # SSH key to use for access to nodes
 public_key_path = "~/.ssh/id_rsa.pub"
@@ -118,6 +118,9 @@ floatingip_pool = "Public-Network"
 
 bastion_allowed_remote_ips = ["0.0.0.0/0"]
 
+# grant volumn to master root, this is important or your may quickly running out of storage in the future
+master_root_volume_size_in_gb = 100
+
 ```
 To start the Terraform deployment, you need to install some plugins using command as follows.
 ```bash
@@ -142,7 +145,7 @@ router_id = cf695cfb-******************
 ```
 Then go back to the kubespary root directory. Try if ansible can successfully reach our clusters using
 ```bash
-ansible -i inventory/my-kube/hosts -m ping all
+ansible -i inventory/$CLUSTER/hosts -m ping all
 ```
 If all of the nodes are accessible, the output would look like
 ![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/ansible_ping_success.png)
