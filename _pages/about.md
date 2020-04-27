@@ -33,7 +33,7 @@ classes: wide
 	* Analyzed data, built dashboarshs and ML models, especially for sales, inventory, operations and planning
 * **McGill University** 
   * Research assistant, 2013-2019
-    - Develop computational pipelines to calculate the key properties for potential TBC materials 
+    * Develop computational pipelines to calculate the key properties for potential TBC materials 
 	  for turbine blade and build a corresponding database for machine learning model to screen the ideal materials
     * Build autoencoder neural network to automate material inspection
     * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
