@@ -2,8 +2,6 @@
 permalink: /about/
 title: "About"
 header:
-  overlay_color: "#000"
-  overlay_filter: "0"
   overlay_image: /assets/images/about_header.jpg
   actions:
     - label: "Talk to me"
@@ -29,16 +27,15 @@ classes: wide
 - Bachelor and Master in Material Science, Central South University, Changsha, China - 2008-2013
 
 ## Work Experience
-* **PRATT & WITHNEY CANADA**
-  * Developer, Data science, Analytics & information Management,  2017–present
-  
-    1. Developed ETL scripts to transfer data from various data source to Hadoop cluster
-	
-	2. Analyzed data, built dashboarshs and ML models, especially for sales, inventory, operations and planning.
+* **Pratt & Witney Canada**
+  * Developer, Data science, Analytics & information Management, 2017–present
+    * Developed ETL scripts to transfer data from various data source to Hadoop cluster
+	* Analyzed data, built dashboarshs and ML models, especially for sales, inventory, operations and planning
 * **McGill University** 
   * Research assistant, 2013-2019
-    1. Develop computational pipelines to calculate the key properties for potential TBC materials for turbine blade and build a corresponding database for machine learning model to screen the ideal materials.
- 	2. Build autoencoder neural network to automate material inspection
- 	3. Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
+    - Develop computational pipelines to calculate the key properties for potential TBC materials 
+	  for turbine blade and build a corresponding database for machine learning model to screen the ideal materials
+    * Build autoencoder neural network to automate material inspection
+    * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
   * Reaserch associate (part-time), 2019-present
-    1. Manage academic cloud, database, and computation workflow
+    * Manage academic cloud, database, and computation workflow
