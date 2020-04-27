@@ -1,9 +1,20 @@
 ---
-layout: post
 title: Deploy Kubernetes with Kubespray on OpenStack
+header:
+  image: assets/images/blog_kube_jhub/academic_computing.png
+categories:
+  - tutorial
+  - cloud
+tags:
+  - tutorial
+  - cloud
+  - jupyterhub
+  - kubernetes
+  - openstack
+toc: true
+toc_sticky: true
 ---
 
-![_config.yml]({{ site.baseurl }}/images/academic_computing.png)
 
 In this post, I will show you how to deploy Kubernetes OpenStack.
 More specifically, [Kubespary](https://github.com/kubernetes-sigs/kubespray) with 
@@ -12,7 +23,7 @@ More specifically, [Kubespary](https://github.com/kubernetes-sigs/kubespray) wit
 ## Status
 
 - *Local:* Ubuntu WSL system (Any Linux system should work as well)
-- *Cloud:* Persistent zone belong to [Compute Canada Cloud, Arbhutus](https://arbutus.cloud.computecanada.ca/) 
+- *Cloud:* Persistent zone belong to [Compute Canada Cloud, Arbutus](https://arbutus.cloud.computecanada.ca/) 
 (Other clouds based on OpenStack should work following this tutorial as well)
 
 ## Requirements
@@ -33,7 +44,8 @@ More specifically, [Kubespary](https://github.com/kubernetes-sigs/kubespray) wit
   ```
   3. [Install Terraform 0.12](https://www.terraform.io/intro/getting-started/install.html) or later.
   4. Download the OpenStack RC File from your cloud provider and load it.
-  ![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/download_rc_file.png)
+  ![RC file download]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/download_rc_file.png)
+  
   ```bash
   source <your_project_name>-openrc.sh
   ```
@@ -148,14 +160,15 @@ Then go back to the kubespary root directory. Try if ansible can successfully re
 ansible -i inventory/$CLUSTER/hosts -m ping all
 ```
 If all of the nodes are accessible, the output would look like
-![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/ansible_ping_success.png)
+![success info]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/ansible_ping_success.png)
 
 **Note**:
-
 - *If the cluster is unreachable, please open additional TCP port 22 for SSH  then try again.*
 - *There are other ports you need to open, i.e., ICMP port which enable pinging master ip externally, TCP 2379 for etcd connection*
+![Additional rules]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/add_additional_security_rules.png)
+{: .notice}
 
-![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/add_additional_security_rules.png)
+## Build Kubernetes cluster
 
 Then let's see how to build Kubernetes on this cluster. Some additional configurations need to be modified.
 
@@ -171,14 +184,6 @@ resolvconf_mode: docker_dns
 use_access_ip: 0
 ```
 
-3. In `inventory/$CLUSTER/group_vars/k8s-cluster/addons.yml` set up 
-```yaml
-helm_enabled: true
-```
-
-**Note**:
-- *If you failed to ping float ip (`ping <float_ip>`), please open ICMP any port and then try again.*
-
 Then make sure you have good internet connection, or you may get timeout exception when you run the ansible-playbook.
 ```bash
 ansible-playbook --become -i inventory/$CLUSTER/hosts cluster.yml
@@ -190,21 +195,25 @@ and run commamd*,
 sudo chmod 755 -R /etc/ssl/etcd
 ```
 *After that, you can check the healthy status by running*
-```
+```bash
 etcdctl --endpoints https://<master_ip>:2379 --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1.pem --key-file=/etc/ssl/etcd/ssl/member-k8s-cluster-k8s-master-1-key.pem cluster-health
 ```
+{: .notice}
 
 After all of these have been done, Please login in your master node and try to run `kubectl get nodes`, it should show the output like this
-![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/kubectl_get_nodes.png)
+![Node info]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/kubectl_get_nodes.png)
+
 
 **Note**:
 - *If it return error message, 
 `"The connection to the server localhost:8080 was refused - did you specify the right host or port?"`, 
 please try to set up $KUBECONFIG using following command,*
+{: .notice}
+
 ```bash
 sudo cp /etc/kubernetes/admin.conf $HOME/ && sudo chown $(id -u):$(id -g) $HOME/admin.conf && export KUBECONFIG=$HOME/admin.conf
 ```
-Finally, append 'export KUBECONFIG=$HOME/admin.conf' at your '.bashrc' file.
+Finally, append `export KUBECONFIG=$HOME/admin.conf` at your '.bashrc' file.
 
 Then you can try `kubectl get nodes` again.
 

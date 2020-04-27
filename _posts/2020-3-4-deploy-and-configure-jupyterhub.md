@@ -1,18 +1,29 @@
 ---
-layout: post
 title: Deploy and configure JupyterHub
+header:
+  image: assets/images/blog_kube_jhub/academic_computing.png
+categories:
+  - tutorial
+  - cloud
+tags:
+  - tutorial
+  - cloud
+  - jupyterhub
+  - kubernetes
+  - openstack
+toc: true
+toc_sticky: true
 ---
 
-![_config.yml]({{ site.baseurl }}/images/academic_computing.png)
 
 In this post, I will show you how to deploy and configure JupyterHub.
 Here I assumed that you already have a Kubernetes cluster and have set up the storageclass based on Heketi-glusterfs.
-if not, please follow my [previous blog]({{ site.baseurl }}/deploy-heketi-glusterfs-for-dynamic-storage) to build set up.
+if not, please follow my [previous blog]({{ "/tutorial/cloud/deploy-heketi-glusterfs-for-dynamic-storage" | relative_url }}) to build one.
 
 ## Create storageclass for pvc assignment
 Prepare yaml files as follows.
 
-'jhub-sc.yml' for hub-db-dir and user home folder pvc assignement
+- 'jhub-sc.yml' for hub-db-dir and user home folder pvc assignement
 ```yaml
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
@@ -28,7 +39,7 @@ parameters:
   volumetype: "replicate:2"
 allowVolumeExpansion: true
 ```
-'jhub-shared-sc.yml' for user shared folder pvc assignment
+- 'jhub-shared-sc.yml' for user shared folder pvc assignment
 ```yaml
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
@@ -44,7 +55,7 @@ parameters:
   volumetype: "replicate:2"
 allowVolumeExpansion: true
 ```
-
+Run
 ```bash
 kubectl apply -f jhub-sc.yml -f jhub-shared-sc.yml
 ```
@@ -58,7 +69,6 @@ how to install helm and deploy jupyterhub first.
 helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
 helm repo update
 
-
 RELEASE=jhub
 NAMESPACE=jhub
 
@@ -66,11 +76,10 @@ helm upgrade --install $RELEASE jupyterhub/jupyterhub --namespace $NAMESPACE --v
 ```
 
 # update config.yaml
-```
+When you need to update configuration, you can modify the config.yaml file and run commands as follows.
+```bash
 RELEASE=jhub
 
 helm upgrade $RELEASE jupyterhub/jupyterhub --version=0.9.0-beta.4 --values config.yaml
 ```
 
-
-https://portworx.com/deploy-ha-jupyterhub-google-kubernetes-engine/

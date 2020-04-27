@@ -1,18 +1,8 @@
 ---
-layout: default
+layout: home
+author_profile: true
+header:
+  image: /assets/images/home_header.jpg
 ---
 
-{% if site.posts.size >= 1 %}
-<h3>Posts</h3>
-<ul class="listing">
-  {% for post in site.posts %}
-  <li>
-  	<span>{{ post.date | date: '%B %d, %Y' }}</span>
-    <a href="{{ post.url }}">{{ post.title }}</a>
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<h1>My brain haven't crafted rainbow-ish paragraphs yet!</h1>
-
-{% endif %}
+<p>Share thoughts on computations, digitalization, academic, engineering, AI and other interesting things.</p>

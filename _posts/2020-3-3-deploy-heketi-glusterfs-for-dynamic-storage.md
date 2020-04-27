@@ -1,13 +1,24 @@
 ---
-layout: post
 title: Deploy Heketi-Glusterfs for dynamic storage
+header:
+  image: assets/images/blog_kube_jhub/academic_computing.png
+categories:
+  - tutorial
+  - cloud
+tags:
+  - tutorial
+  - cloud
+  - jupyterhub
+  - kubernetes
+  - openstack
+toc: true
+toc_sticky: true
 ---
 
-![_config.yml]({{ site.baseurl }}/images/academic_computing.png)
 
 In this post, I will show you how to deploy Heketi-Glusterfs on Kubernetes cluster for dynamic storage.
 Here I assumed that you already have a Kubernetes cluster,
-if not, please follow my [previous blog]({{ site.baseurl }}/deploy-kubernetes-with-kubespray-on-openstack) to build one.
+if not, please follow my [previous blog]({{ "/tutorial/cloud/deploy-kubernetes-with-kubespray-on-openstack" | relative_url }}) to build one.
 
 ## Cluster Status
 
@@ -20,10 +31,11 @@ Worker nodes with volumn attached (/dev/vdb):
 - k8s-cluster-k8s-node-nf-3 192.168.147.25 /dev/vdb
 - k8s-cluster-k8s-node-nf-4 192.168.147.16 /dev/vdb
 
-![_config.yml]({{ site.baseurl }}/images/blog_kube_jhub/volumn_setup.png)
+![Volumn setup]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/volumn_setup.png)
 
 **Note**:
 - *You just need to create the volumns ('/dev/vdb') and attach them to the worker nodes, please don't do anything else to the volumns.*
+{: .notice}
 
 ## Requirements
 
@@ -70,8 +82,8 @@ ansible-playbook --become -i hosts prepare_heketi.yml
 ```
 
 **Note**:
-
-- *You need to install glusterfs>=7, because we need it to match with the versions we will use to deploy on pods.*
+- *Using above setup, we will install glusterfs>=7, which is matched with the gluster versions we will deploy in the pods.*
+{: .notice}
 
 Remove taint of the master node.
 ```bash
