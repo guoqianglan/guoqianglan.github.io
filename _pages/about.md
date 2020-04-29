@@ -6,7 +6,7 @@ header:
   actions:
     - label: "Talk to me"
       url: "mailto:guoqiang.lan@mail.mcgill.ca"
-excerpt: "Share thoughts on computations, digitalization and AI applied in academic research"
+excerpt: "Share thoughts on computations, digitalization and AI for academic research"
 classes: wide
 ---
 
@@ -39,3 +39,4 @@ classes: wide
     * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
   * Reaserch associate (part-time), 2019-present
     * Manage academic cloud, database, and computation workflow
+	* Apply artificial intelligent to facilitate new material discovery
