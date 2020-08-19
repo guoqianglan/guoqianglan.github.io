@@ -122,7 +122,7 @@ flavor_gfs_node = "448319d3-2417-4eb1-9da2-63a2fdbc23f6"
 # networking
 network_name = "k8s-network"
 
-external_net = "6621bf61-6094-4b24-a9a0-f5794c3a881e"
+external_net = "6651bf71********************"
 
 subnet_cidr = "192.168.147.0/24"
 
@@ -132,7 +132,7 @@ bastion_allowed_remote_ips = ["0.0.0.0/0"]
 
 # grant volumn to master root, this is important or your may quickly running out of storage in the future
 master_root_volume_size_in_gb = 100
-
+node_root_volume_size_in_gb = 100
 ```
 To start the Terraform deployment, you need to install some plugins using command as follows.
 ```bash
@@ -163,6 +163,8 @@ If all of the nodes are accessible, the output would look like
 ![success info]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/ansible_ping_success.png)
 
 **Note**:
+- *If you got warning about "Ansible is being run in a world writable directory, ignoring it as an ansible.cfg", 
+please change the permission of the kubespary folder by `chmod 775 -R kubespray`*
 - *If the cluster is unreachable, please open additional TCP port 22 for SSH  then try again.*
 - *There are other ports you need to open, i.e., ICMP port which enable pinging master ip externally, TCP 2379 for etcd connection*
 ![Additional rules]({{ site.url }}{{ site.baseurl }}/assets/images/blog_kube_jhub/add_additional_security_rules.png)
@@ -179,9 +181,8 @@ cloud_provider: openstack
 
 2. In `inventory/$CLUSTER/group_vars/k8s-cluster/k8s-cluster.yml`, set up 
 ```yaml
-kube_network_plugin: flannel
+kube_network_plugin: calico
 resolvconf_mode: docker_dns
-use_access_ip: 0
 ```
 
 Then make sure you have good internet connection, or you may get timeout exception when you run the ansible-playbook.
@@ -207,19 +208,14 @@ After all of these have been done, Please login in your master node and try to r
 **Note**:
 - *If it return error message, 
 `"The connection to the server localhost:8080 was refused - did you specify the right host or port?"`, 
+or `"error: no configuration has been provided, try setting KUBERNETES_MASTER environment variable"` 
 please try to set up $KUBECONFIG using following command,*
 {: .notice}
 
 ```bash
-sudo cp /etc/kubernetes/admin.conf $HOME/ && sudo chown $(id -u):$(id -g) $HOME/admin.conf && export KUBECONFIG=$HOME/admin.conf
+sudo chown $(id -u):$(id -g) /etc/kubernetes/admin.conf && export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
-Finally, append `export KUBECONFIG=$HOME/admin.conf` at your '.bashrc' file.
+Finally, append `export KUBECONFIG=/etc/kubernetes/admin.conf` at your '.bashrc' file.
 
 Then you can try `kubectl get nodes` again.
-
-In the future, if you restart your master node, you may need to also restart the Kubernetes by running 
-```bash
-sudo systemctl restart kubelet.service
-```
-
 

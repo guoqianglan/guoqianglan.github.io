@@ -72,7 +72,7 @@ helm repo update
 RELEASE=jhub
 NAMESPACE=jhub
 
-helm upgrade --install $RELEASE jupyterhub/jupyterhub --namespace $NAMESPACE --version=0.9.0-beta.4 --values config.yaml
+helm upgrade --install $RELEASE jupyterhub/jupyterhub --namespace $NAMESPACE --version=0.9.0 --values config.yaml
 ```
 
 # update config.yaml
@@ -80,6 +80,6 @@ When you need to update configuration, you can modify the config.yaml file and r
 ```bash
 RELEASE=jhub
 
-helm upgrade $RELEASE jupyterhub/jupyterhub --version=0.9.0-beta.4 --values config.yaml
+helm upgrade $RELEASE jupyterhub/jupyterhub --version=0.9.0 --values config.yaml
 ```
 
