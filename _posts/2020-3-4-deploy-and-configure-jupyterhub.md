@@ -21,9 +21,7 @@ Here I assumed that you already have a Kubernetes cluster and have set up the st
 if not, please follow my [previous blog]({{ "/tutorial/cloud/deploy-heketi-glusterfs-for-dynamic-storage" | relative_url }}) to build one.
 
 ## Create pvc for user shared space
-Prepare yaml files as follows.
-
-- 'share-pvc.yaml' for hub-db-dir and user home folder pvc assignement
+Prepare `share-pvc.yaml`,
 ```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -39,7 +37,7 @@ spec:
    requests:
      storage: 200Gi
 ```
-Run
+
 ```bash
 kubectl apply -f shared-sc.yml
 ```
