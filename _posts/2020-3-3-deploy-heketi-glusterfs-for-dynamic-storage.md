@@ -465,7 +465,7 @@ Id:5108ea8a533e7366b26755470cf6d242 [file][block]
 ```
 
 Finally, using the heketi clusters id, '5108ea8a533e7366b26755470cf6d242', and resturl, "http://10.233.42.189:8080", 
-we set create our storageclass as follows,
+we can create our storageclass as follows,
 ```yaml
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
