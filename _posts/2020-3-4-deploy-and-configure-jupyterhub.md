@@ -91,6 +91,7 @@ singleuser:
       kubespawner_override:
         image:  jupyter/minimal-notebook:latest
 ```
+{: .notice}
 
 # update config.yaml
 When you need to update configuration, you can modify the config.yaml file and run commands as follows.
