@@ -57,6 +57,41 @@ NAMESPACE=jhub
 helm upgrade --install $RELEASE jupyterhub/jupyterhub --namespace $NAMESPACE --version=0.9.0 --values config.yaml
 ```
 
+**Note**:
+To specify memory, cpu, storage and image for singleuser, you can modify the config.yaml as below:
+```yaml
+singleuser:
+  memory:
+    guarantee: 2G
+    limit: 2G
+  cpu:
+    limit: 2
+    guarantee: 1
+  storage:
+    capacity: 20Gi
+    dynamic:
+      storageClass: heketi-gluster
+    extraVolumes:
+      - name: jhub-shared
+        persistentVolumeClaim:
+          claimName: jhub-shared-vol
+    extraVolumeMounts:
+      - name: jhub-shared
+        mountPath: /home/shared
+  image:
+    name: lanheken/jupyter
+    tag: cms
+    pullPolicy: "Always"
+  profileList:
+    - display_name: "CMS environment"
+      description: "Image for computational material science"
+      default: true
+    - display_name: "Minimal environment"
+      description: "To avoid too much bells and whistles: Python."
+      kubespawner_override:
+        image:  jupyter/minimal-notebook:latest
+```
+
 # update config.yaml
 When you need to update configuration, you can modify the config.yaml file and run commands as follows.
 ```bash

@@ -10,7 +10,7 @@ excerpt: "Share thoughts on computations, digitalization and AI for academic res
 classes: wide
 ---
 
-> I am an innovative developer and researcher, somewhat geek, passionate about how big data and artificial intelligent can transform academic research and manufacturing.
+> I am an innovative developer and researcher, somewhat geek, passionate about how big data and artificial intelligent can transform academic research,engineering and manufacturing.
 
 > I pride myself in being a fast learner who always keeps learning, enabling myself to quickly adapt to different domains and be updated with latest technologies.
 
