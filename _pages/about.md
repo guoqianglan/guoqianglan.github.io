@@ -23,21 +23,22 @@ classes: wide
 - Other domain knowledge: Physics, Computational material science, Aerospace engineering and business (supply chain optimizaiton, SIOP, CRM)
 
 ## Education
-- PhD in Computational Material Science/Material Informatics, McGill University, Qeubec, Canada – 2013-2019
+- PhD in Computational Material Science/Material Informatics, McGill University, Quebec, Canada – 2013-2019
 - Bachelor and Master in Material Science, Central South University, Changsha, China - 2008-2013
 
 ## Work Experience
-* **Pratt & Witney Canada**
+* **Pratt & Whitney Canada**
   * Python Developer, Data science/engineering, Analytics & information Management, 2017–present
     * Develop general ELT modules to transfer data (from SAP, SQL server, WEB, etc.) to Hadoop Cluster
 	* Analyze data (from MRP, Finance, CRM, etc.), built and deployed dashboards and ML models
+    * Review and improve the quality and performance of the codes written by other developers and put them into production
 * **McGill University** 
   * Research assistant, 2013-2019
     * Develop computational pipelines to calculate the key properties for potential TBC materials 
 	  for turbine blade and build a corresponding database for machine learning model to screen the ideal materials
     * Build autoencoder neural network to automate material inspection
     * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
-  * Reaserch associate (part-time), 2019-present
+  * Research associate (part-time), 2019-present
     * Manage academic cloud, database, and computation workflows/pipelines
 	* Apply artificial intelligent to facilitate new material discovery
 	* Coach master and PhD students for building computation workflows and data pipeline
