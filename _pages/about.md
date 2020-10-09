@@ -44,5 +44,5 @@ classes: wide
 	* Coach master and PhD students for building computation workflows and data pipeline
 	* Assist to build AI-powered manufacturing processes for thin-film growth
 
-## Related link:
-- (Google scholar)[https://scholar.google.com/citations?hl=zh-CN&user=npjWruAAAAAJ]
+## Publications:
+- See my (Google scholar)[https://scholar.google.com/citations?hl=zh-CN&user=npjWruAAAAAJ]
