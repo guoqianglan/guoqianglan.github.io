@@ -45,4 +45,4 @@ classes: wide
 	* Assist to build AI-powered manufacturing processes for thin-film growth
 
 ## Publications:
-- See my (Google scholar)[https://scholar.google.com/citations?hl=zh-CN&user=npjWruAAAAAJ]
+- See my [Google scholar](https://scholar.google.com/citations?hl=zh-CN&user=npjWruAAAAAJ)
