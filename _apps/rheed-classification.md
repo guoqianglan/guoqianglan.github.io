@@ -20,4 +20,6 @@ tags:
 
 > In the backend, the CNN models for image classification are deployed as REST API with two replicated sets on [McGill MatNavi]({{ "/idea/cloud/Infrastructure-for-next-generation-material-infomatics-platform/" | relative_url }})
 
+> More RHEED images need to be labeled.
+
 > URL: [https://mbekits.multiscale.ml/](https://mbekits.multiscale.ml/)
