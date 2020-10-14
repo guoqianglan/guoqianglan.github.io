@@ -1,7 +1,7 @@
 ---
-title: Infrastructure for next-generation material informatics platform
+title: Infrastructure for a SaaS platform for material informatics 
 header:
-  image: assets/images/blog_kube_jhub/academic_computing.png
+  image: assets/images/blog_infrastructure/header.png
 categories:
   - idea
   - cloud
