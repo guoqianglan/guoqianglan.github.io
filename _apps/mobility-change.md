@@ -12,6 +12,6 @@ tags:
   - COVID-19
 ---
 
-> Global mobility change during COVID-19
+# Global mobility change during COVID-19
 
 > Please be patient, the app will show up at the header if it finished loading.

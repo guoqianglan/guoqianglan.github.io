@@ -12,6 +12,8 @@ tags:
   - rheed
 ---
 
+# Development of an AI-powered manufacturing process for thin-film growth
+
 > This is a part of product for a recent project I am working on, i.e., development of an AI-powered manufacturing process for thin-film growth.
 
 > This application is deployed with two replicated sets on a Kubernetes cluster ([McGill MatNavi]({{ "/idea/cloud/Infrastructure-for-next-generation-material-infomatics-platform/" | relative_url }})) I built.
