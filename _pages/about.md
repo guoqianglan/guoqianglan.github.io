@@ -39,7 +39,7 @@ classes: wide
     * Build autoencoder neural network to automate material inspection
     * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
   * Research associate (part-time), 2019-present
-    * Design a SaaS platform for material informatics based on Compute Canada Cloud and HPC
+    * [Design a SaaS platform for material informatics based on Compute Canada Cloud and HPC]({{ "/idea/cloud/Infrastructure-for-next-generation-material-infomatics-platform/" | relative_url }}))
     * Manage academic cloud, database, and computation workflows/pipelines
 	* Apply artificial intelligent to facilitate new material discovery
 	* Coach master and PhD students for building computation workflows, data pipeline and CI/CD pipeline
