@@ -41,7 +41,7 @@ classes: wide
   * Research associate (part-time), 2019-present
     * [Design a SaaS platform for material informatics based on Compute Canada Cloud and HPC]({{ "/idea/cloud/Infrastructure-for-next-generation-material-infomatics-platform/" | relative_url }}))
     * Manage academic cloud, database, and computation workflows/pipelines
-	* Apply artificial intelligent to facilitate new material discovery
+	* [Apply artificial intelligent to facilitate new material discovery]({{ "/apps/rheed-classification/" | relative_url }}))
 	* Coach master and PhD students for building computation workflows, data pipeline and CI/CD pipeline
 	* Assist to build AI-powered manufacturing processes for thin-film growth
 
