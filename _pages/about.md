@@ -19,7 +19,7 @@ classes: wide
 - Programming Language: Python (~8 years) and shell script (~8 years)
 - Cloud: Kubernetes cluster management (~1 years) and High-performance computing (~8 years)
 - Big data: Hadoop ecosystem, Spark, HIVE (~3 years)
-- Considerable Python programming experience in automating processes, ETL, building machining learning models, creating web and Qt GUIs, deploying applications, natural language processing, and computer vision
+- Considerable Python programming experience in automating processes, Object Oriented design, ETL, building machining learning models, creating web and Qt GUIs, deploying applications, natural language processing, and computer vision
 - Other domain knowledge: Physics, Computational material science, Aerospace engineering and business (supply chain optimizaiton, SIOP, CRM)
 
 ## Education
