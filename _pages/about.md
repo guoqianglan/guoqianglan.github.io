@@ -20,7 +20,7 @@ classes: wide
 - Cloud: Kubernetes cluster management (~1 years) and High-performance computing (~8 years)
 - Big data: Hadoop ecosystem, Spark, HIVE (~3 years)
 - Considerable Python programming experience in automating processes, Object Oriented design, ETL, building machining learning models, creating web and Qt GUIs, deploying applications, natural language processing, and computer vision
-- Other domain knowledge: Physics, Computational material science, Aerospace engineering and business (supply chain optimizaiton, SIOP, CRM)
+- Other domain knowledge: Physics, material science, Aerospace engineering and business (supply chain optimizaiton, SIOP, CRM)
 
 ## Education
 - PhD in Computational Material Science/Material Informatics, McGill University, Quebec, Canada – 2013-2019
@@ -39,11 +39,11 @@ classes: wide
     * Build autoencoder neural network to automate material inspection
     * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
   * Research associate (part-time), 2019-present
-    * [Design a SaaS platform for material informatics based on Compute Canada Cloud and HPC]({{ "/idea/cloud/Infrastructure-for-next-generation-material-infomatics-platform/" | relative_url }}))
+    * [Design a SaaS platform for material informatics based on Compute Canada Cloud and HPC]({{ "/idea/cloud/Infrastructure-for-next-generation-material-infomatics-platform/" | relative_url }})
     * Manage academic cloud, database, and computation workflows/pipelines
-	* [Apply artificial intelligent to facilitate new material discovery]({{ "/apps/rheed-classification/" | relative_url }}))
-	* Coach master and PhD students for building computation workflows, data pipeline and CI/CD pipeline
-	* Assist to build AI-powered manufacturing processes for thin-film growth
+	* Apply artificial intelligent to facilitate new material discovery
+	* Coach master and PhD students for building computation workflows, data pipelines and CI/CD pipelines
+	* (Assist to build AI-powered manufacturing processes for thin-film growth){{ "/apps/rheed-classification/" | relative_url }})
 
 ## Publications:
 - See my [Google scholar](https://scholar.google.com/citations?hl=zh-CN&user=npjWruAAAAAJ)
