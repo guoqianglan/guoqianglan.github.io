@@ -6,7 +6,7 @@ header:
   actions:
     - label: "Talk to me"
       url: "mailto:guoqiang.lan@mail.mcgill.ca"
-excerpt: "Share thoughts on computations, digitalization and AI for academic research"
+excerpt: "Share thoughts on computations, digitalization and AI for academic research, R&D, engineering and manufacturing"
 classes: wide
 ---
 
