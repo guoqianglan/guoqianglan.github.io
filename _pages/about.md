@@ -43,7 +43,7 @@ classes: wide
     * Manage academic cloud, database, and computation workflows/pipelines
 	* Apply artificial intelligent to facilitate new material discovery
 	* Coach master and PhD students for building computation workflows, data pipelines and CI/CD pipelines
-	* (Assist to build AI-powered manufacturing processes for thin-film growth){{ "/apps/rheed-classification/" | relative_url }})
+	* [Assist to build AI-powered manufacturing processes for thin-film growth]({{ "/apps/rheed-classification/" | relative_url }})
 
 ## Publications:
 - See my [Google scholar](https://scholar.google.com/citations?hl=zh-CN&user=npjWruAAAAAJ)
