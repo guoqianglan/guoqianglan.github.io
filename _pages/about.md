@@ -10,7 +10,7 @@ excerpt: "Share thoughts on computations, digitalization and AI for academic res
 classes: wide
 ---
 
-> I am an innovative developer and researcher, somewhat geek, passionate about how big data and artificial intelligent can transform academic research,engineering and manufacturing.
+> I am an innovative developer and researcher, somewhat geek, passionate about how big data and artificial intelligent can transform academic research, R&D, engineering and manufacturing.
 
 > I pride myself in being a fast learner who always keeps learning, enabling myself to quickly adapt to different domains and be updated with latest technologies.
 
@@ -30,7 +30,7 @@ classes: wide
 * **Pratt & Whitney Canada**
   * Python Developer, Data science/engineering, Analytics & information Management, 2017–present
     * Develop general ELT modules to transfer data (from SAP, SQL server, WEB, etc.) to Hadoop Cluster
-	* Analyze data (from MRP, Finance, CRM, etc.), built and deployed dashboards and ML models
+	* Analyze data (from supply chain management, MRP, Finance, CRM, etc.), built and deployed dashboards and ML models
     * Review and improve the quality and performance of the codes written by other developers and put them into production
 * **McGill University** 
   * Research assistant, 2013-2019
@@ -39,9 +39,10 @@ classes: wide
     * Build autoencoder neural network to automate material inspection
     * Build LSTM neutral network to forecast the remaining useful life of the turbine engines based on their multivariate-time-series sensor data
   * Research associate (part-time), 2019-present
+    * Design a SaaS platform for material informatics based on Compute Canada Cloud and HPC
     * Manage academic cloud, database, and computation workflows/pipelines
 	* Apply artificial intelligent to facilitate new material discovery
-	* Coach master and PhD students for building computation workflows and data pipeline
+	* Coach master and PhD students for building computation workflows, data pipeline and CI/CD pipeline
 	* Assist to build AI-powered manufacturing processes for thin-film growth
 
 ## Publications:
