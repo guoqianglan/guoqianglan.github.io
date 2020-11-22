@@ -17,7 +17,7 @@ classes: wide
 
 ## QUALIFICATIONS AND SKILLS
 - Programming Language: Python (~8 years) and shell script (~8 years)
-- Cloud: Kubernetes cluster management (~1 years) and High-performance computing (~8 years)
+- Cloud: Kubernetes cluster management (~1 years) and High-performance computing on CPUs or GPUs (~8 years)
 - Big data: Hadoop ecosystem, Spark, HIVE (~3 years)
 - Considerable Python programming experience in automating processes, Object Oriented design, ETL, building machining learning models, creating web and Qt GUIs, deploying applications, natural language processing, and computer vision
 - Other domain knowledge: Physics, material science, Aerospace engineering and business (supply chain optimizaiton, SIOP, CRM)
@@ -30,7 +30,7 @@ classes: wide
 * **Pratt & Whitney Canada**
   * Python Developer, Data science/engineering, Analytics & information Management, 2017–present
     * Develop general ELT modules to transfer data (from SAP, SQL server, WEB, etc.) to Hadoop Cluster
-	* Analyze data (from supply chain management, MRP, Finance, CRM, etc.), built and deployed dashboards and ML models
+	* Analyze data (from supply chain management, MRP, Finance, CRM, aftermarket, etc.), built and deployed dashboards and ML models
     * Review and improve the quality and performance of the codes written by other developers and put them into production
 * **McGill University** 
   * Research assistant, 2013-2019
