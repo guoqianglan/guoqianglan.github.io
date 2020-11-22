@@ -12,11 +12,9 @@ tags:
   - geospatial
 ---
 
-# Geospatial object detection and segmentation
-
 > Dataset: [NWPU-VHR-10](https://drive.google.com/file/d/1X2aE3uDRckIqjXlUUuDNmYzXJohlh3RJ/view?usp=sharing)
 
-> Model: Mask R-CNN
+> Model: Mask R-CNN with torchvision
 
 > mAP (IOU = 0.5): 0.973
 
