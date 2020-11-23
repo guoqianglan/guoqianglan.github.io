@@ -1,8 +1,7 @@
 ---
-title: "LIDAR point cloud segmentation"
+title: "3D Object Detection for Autonomous Vehicles (under construction)"
 header:
-  iframe:
-    url: {{ "/assets/images/lidar_LIDAR_TOP_first_person.html" | relative_url }}
+  image: assets/assets/images/lidar.gif
   teaser: assets/images/apps/point_cloud.png
 categories:
   - app
@@ -14,7 +13,12 @@ tags:
 
 > Dataset: [Lyft 3D Object Detection for Autonomous Vehicles](https://www.kaggle.com/c/3d-object-detection-for-autonomous-vehicles/data)
 
+> Visualization: Pydeck
 
-> Things need to do next: May need more samples for some classes to improve the recall.
+> Things to do: 
+
+* Reproduce the result of [3D U-Net model](https://www.kaggle.com/phunghieu/getting-started-with-3d-semantic-segmentation)
+* Try [ShellConv](https://arxiv.org/pdf/1908.06295.pdf), which is light weight and more effienct, for point cloud segmentation.
+* Try [rotation invariant Convolutions for 3D Point Clouds Deep Learning](https://arxiv.org/pdf/1908.06297.pdf)
 
 

@@ -22,6 +22,12 @@ tags:
 
 > This application is deployed with two replicated sets on a Kubernetes cluster
 
-> Things need to do next: May need more samples for some classes to improve the recall.
+> Things need to do next: 
+
+* Evaluate FPS (Frames per seconds)
+* Try to use a light weight weight model (e.g., mobilenet_v2, suqeezeNet...) to replace ResNet to improve the FPS
+* Compare current metric with the work done by others
+* Use a confusion matrix to recognize patterns which classes are mixed with which or which classes cannot be detect
+* May need more samples for some classes to improve the recall.
 
 > URL: [https://geoseg.multiscale.ml/](https://geoseg.multiscale.ml/)
