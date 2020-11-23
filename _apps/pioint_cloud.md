@@ -1,7 +1,7 @@
 ---
-title: "3D Object Detection for Autonomous Vehicles (under construction)"
+title: "3D Object Detection (under construction)"
 header:
-  image: assets/assets/images/lidar.gif
+  image: assets/images/lidar.gif
   teaser: assets/images/apps/point_cloud.png
 categories:
   - app
